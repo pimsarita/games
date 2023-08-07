@@ -1,0 +1,89 @@
+import android.os.Bundle
+import android.widget.Button
+import androidx.appcompat.app.AppCompatActivity
+
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var buttons: Array<Array<Button>>
+    private var currentPlayer = "X"
+    private var gameOver = false
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        buttons = Array(3) { row ->
+            Array(3) { col ->
+                findViewById<Button>(resources.getIdentifier("button$row$col", "id", packageName)).apply {
+                    setOnClickListener { onCellClicked(row, col) }
+                }
+            }
+        }
+
+        findViewById<Button>(R.id.resetButton).setOnClickListener { resetGame() }
+    }
+
+    private fun onCellClicked(row: Int, col: Int) {
+        if (!gameOver && buttons[row][col].text.isEmpty()) {
+            buttons[row][col].text = currentPlayer
+            checkWinner(row, col)
+            currentPlayer = if (currentPlayer == "X") "O" else "X"
+        }
+    }
+
+    private fun checkWinner(row: Int, col: Int) {
+        val player = buttons[row][col].text.toString()
+
+        // Check row
+        if (buttons[row].all { it.text == player }) {
+            gameOver = true
+            announceWinner(player)
+            return
+        }
+
+        // Check column
+        if (buttons.all { it[col].text == player }) {
+            gameOver = true
+            announceWinner(player)
+            return
+        }
+
+        // Check diagonal
+        if (row == col && buttons.all { it[row].text == player }) {
+            gameOver = true
+            announceWinner(player)
+            return
+        }
+
+        // Check anti-diagonal
+        if (row + col == 2 && buttons.all { it[2 - row].text == player }) {
+            gameOver = true
+            announceWinner(player)
+            return
+        }
+
+        // Check for draw
+        if (buttons.all { row -> row.all { it.text.isNotEmpty() } }) {
+            gameOver = true
+            announceDraw()
+        }
+    }
+
+    private fun announceWinner(player: String) {
+        // Implement your own logic to show a winner message
+    }
+
+    private fun announceDraw() {
+        // Implement your own logic to show a draw message
+    }
+
+    private fun resetGame() {
+        for (row in buttons) {
+            for (button in row) {
+                button.text = ""
+            }
+        }
+        currentPlayer = "X"
+        gameOver = false
+    }
+}
