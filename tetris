@@ -1,0 +1,68 @@
+import pygame
+import random
+
+pygame.init()
+
+# Константы
+SCREEN_WIDTH = 300
+SCREEN_HEIGHT = 600
+BLOCK_SIZE = 30
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+
+# Инициализация окна
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+pygame.display.set_caption("Tetris")
+
+# Определение фигур
+SHAPES = [
+    [[1, 1, 1, 1]],
+    [[1, 1], [1, 1]],
+    [[1, 1, 0], [0, 1, 1]],
+    [[0, 1, 1], [1, 1, 0]],
+    [[1, 1, 1], [0, 1, 0]],
+    [[1, 1, 1], [1, 0, 0]],
+    [[1, 1, 1], [0, 0, 1]]
+]
+
+# Функция для создания новой фигуры
+def new_shape():
+    shape = random.choice(SHAPES)
+    return shape
+
+# Основной игровой цикл
+def main():
+    clock = pygame.time.Clock()
+    game_over = False
+    current_shape = new_shape()
+    shape_x = SCREEN_WIDTH // 2 - len(current_shape[0]) * BLOCK_SIZE // 2
+    shape_y = 0
+
+    while not game_over:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                game_over = True
+
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT]:
+            shape_x -= BLOCK_SIZE
+        if keys[pygame.K_RIGHT]:
+            shape_x += BLOCK_SIZE
+        if keys[pygame.K_DOWN]:
+            shape_y += BLOCK_SIZE
+
+        screen.fill(BLACK)
+
+        # Отрисовка текущей фигуры
+        for i in range(len(current_shape)):
+            for j in range(len(current_shape[i])):
+                if current_shape[i][j] == 1:
+                    pygame.draw.rect(screen, WHITE, (shape_x + j * BLOCK_SIZE, shape_y + i * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE))
+
+        pygame.display.update()
+        clock.tick(10)
+
+    pygame.quit()
+
+if __name__ == "__main__":
+    main()
