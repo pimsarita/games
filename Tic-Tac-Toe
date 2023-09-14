@@ -7,6 +7,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var buttons: Array<Array<Button>>
     private var currentPlayer = "X"
     private var gameOver = false
+    private var movesMade = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +29,7 @@ class MainActivity : AppCompatActivity() {
             buttons[row][col].text = currentPlayer
             checkWinner(row, col)
             currentPlayer = if (currentPlayer == "X") "O" else "X"
+            movesMade++
         }
     }
 
@@ -63,7 +65,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Check for draw
-        if (buttons.all { row -> row.all { it.text.isNotEmpty() } }) {
+        if (movesMade == 9) {
             gameOver = true
             announceDraw()
         }
@@ -85,5 +87,6 @@ class MainActivity : AppCompatActivity() {
         }
         currentPlayer = "X"
         gameOver = false
+        movesMade = 0
     }
 }
