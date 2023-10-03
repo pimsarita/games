@@ -8,6 +8,7 @@ class MainActivity : AppCompatActivity() {
     private var currentPlayer = "X"
     private var gameOver = false
     private var movesMade = 0
+    private var aiPlayer = "O"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,8 +29,11 @@ class MainActivity : AppCompatActivity() {
         if (!gameOver && buttons[row][col].text.isEmpty()) {
             buttons[row][col].text = currentPlayer
             checkWinner(row, col)
-            currentPlayer = if (currentPlayer == "X") "O" else "X"
+            currentPlayer = if (currentPlayer == "X") aiPlayer else "X"
             movesMade++
+            if (!gameOver && currentPlayer == aiPlayer) {
+                makeAiMove()
+            }
         }
     }
 
@@ -88,5 +92,25 @@ class MainActivity : AppCompatActivity() {
         currentPlayer = "X"
         gameOver = false
         movesMade = 0
+    }
+
+    private fun makeAiMove() {
+        // Implement your own AI logic to make a move
+        // For example, you could choose a random empty cell
+        val emptyCells = mutableListOf<Pair<Int, Int>>()
+        for (i in 0..2) {
+            for (j in 0..2) {
+                if (buttons[i][j].text.isEmpty()) {
+                    emptyCells.add(Pair(i, j))
+                }
+            }
+        }
+        if (emptyCells.isNotEmpty()) {
+            val (row, col) = emptyCells.random()
+            buttons[row][col].text = aiPlayer
+            checkWinner(row, col)
+            currentPlayer = "X"
+            movesMade++
+        }
     }
 }
