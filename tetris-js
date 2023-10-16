@@ -1,0 +1,68 @@
+// Константы
+const SCREEN_WIDTH = 300;
+const SCREEN_HEIGHT = 600;
+const BLOCK_SIZE = 30;
+const WHITE = "#FFFFFF";
+const BLACK = "#000000";
+
+// Инициализация canvas
+const canvas = document.createElement("canvas");
+canvas.width = SCREEN_WIDTH;
+canvas.height = SCREEN_HEIGHT;
+document.body.appendChild(canvas);
+const ctx = canvas.getContext("2d");
+ctx.canvas.id = "Tetris";
+
+// Определение фигур
+const SHAPES = [
+    [[1, 1, 1, 1]],
+    [[1, 1], [1, 1]],
+    [[1, 1, 0], [0, 1, 1]],
+    [[0, 1, 1], [1, 1, 0]],
+    [[1, 1, 1], [0, 1, 0]],
+    [[1, 1, 1], [1, 0, 0]],
+    [[1, 1, 1], [0, 0, 1]]
+];
+
+// Функция для создания новой фигуры
+function new_shape() {
+    const shape = SHAPES[Math.floor(Math.random() * SHAPES.length)];
+    return shape;
+}
+
+// Основной игровой цикл
+function main() {
+    const current_shape = new_shape();
+    let shape_x = SCREEN_WIDTH / 2 - current_shape[0].length * BLOCK_SIZE / 2;
+    let shape_y = 0;
+
+    function draw_shape() {
+        ctx.fillStyle = WHITE;
+        for (let i = 0; i < current_shape.length; i++) {
+            for (let j = 0; j < current_shape[i].length; j++) {
+                if (current_shape[i][j] === 1) {
+                    ctx.fillRect(shape_x + j * BLOCK_SIZE, shape_y + i * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+                }
+            }
+        }
+    }
+
+    function clear_screen() {
+        ctx.fillStyle = BLACK;
+        ctx.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+    }
+
+    function update() {
+        clear_screen();
+        draw_shape();
+        shape_y += BLOCK_SIZE;
+    }
+
+    setInterval(update, 1000 / 10);
+}
+
+if (document.readyState === "complete") {
+    main();
+} else {
+    window.addEventListener("load", main);
+}
