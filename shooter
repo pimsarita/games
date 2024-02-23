@@ -13,7 +13,7 @@ class ShooterGame(Widget):
         self.score = 0
 
         # Create shooter (player) image
-        self.shooter = Image(source='shooter.png', pos=(300, 100), size=(100, 100))
+        self.shooter = Image(source='shooter.png', pos=(300, 100), size=(100, 100)) // change image size //
         self.add_widget(self.shooter)
 
         # Schedule enemy creation
